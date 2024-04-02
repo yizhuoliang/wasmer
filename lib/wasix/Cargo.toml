@@ -203,3 +203,6 @@ features = [
     "sys-default",
 ]
 rustc-args = ["--cfg", "docsrs"]
+
+[profile.release]
+debug = true
