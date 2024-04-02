@@ -204,5 +204,4 @@ features = [
 ]
 rustc-args = ["--cfg", "docsrs"]
 
-[profile.release]
 debug = true
