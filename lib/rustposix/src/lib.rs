@@ -1,4 +1,4 @@
-#[link(name = "name_of_library")]
+#[link(name = "rustposix")]
 extern "C" {
     fn lindrustinit();
 }
