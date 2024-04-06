@@ -1,5 +1,5 @@
+use rustposix::lind_lindrustinit;
+
 fn main() {
-    unsafe {
-        lindrustinit(); // Call the external function
-    }
+    lind_lindrustinit(); // Call the external function
 }
