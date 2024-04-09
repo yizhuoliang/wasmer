@@ -1,7 +1,7 @@
 pub mod librustposix {
     use libc::{
-        c_char, c_void, fd_set, itimerval, off_t, rlimit, size_t, sockaddr, socklen_t, ssize_t,
-        statfs, timespec, timeval,
+        c_char, c_void, fd_set, itimerval, off_t, rlimit, sockaddr, socklen_t, ssize_t, statfs,
+        timespec, timeval,
     };
 
     pub const LIND_SAFE_FS_ACCESS: i32 = 2;
