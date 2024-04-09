@@ -225,7 +225,7 @@ pub fn lind_lindrustfinalize() {
 
 pub fn lind_rustposix_thread_init(cageid: u64, signalflag: u64) {
     unsafe {
-        lind_rustposix_thread_init(cageid, signalflag);
+        rustposix_thread_init(cageid, signalflag);
     }
 }
 
