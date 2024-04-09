@@ -167,6 +167,8 @@ pub mod librustposix {
         pub(crate) fn lindrustinit(verbosity: i32);
 
         pub(crate) fn lindrustfinalize();
+
+        pub(crate) fn rustposix_thread_init(cageid: u64, signalflag: u64);
     }
 }
 
@@ -221,10 +223,16 @@ pub fn lind_lindrustfinalize() {
     }
 }
 
-pub fn lind_write(fd: i32, buf: *const libc::c_void, count: usize, cage_id: u64) {
+pub fn lind_rustposix_thread_init(cageid: u64, signalflag: u64) {
+    unsafe {
+        lind_rustposix_thread_init(cageid, signalflag);
+    }
+}
+
+pub fn lind_write(fd: i32, buf: *const libc::c_void, count: usize, cageid: u64) {
     unsafe {
         dispatch!(
-            cage_id,
+            cageid,
             crate::librustposix::LIND_SAFE_FS_WRITE,
             RustArg { dispatch_int: fd },
             RustArg { dispatch_cbuf: buf },
