@@ -44,6 +44,7 @@ wasmer-compiler = { path = "../compiler", version = "=4.2.7" }
 wasmer-derive = { path = "../derive", version = "=4.2.7" }
 wasmer-types = { path = "../types", version = "=4.2.7" }
 target-lexicon = { version = "0.12.2", default-features = false }
+rustposix = { path = "../rustposix", version = "=4.2.7" }
 # - Optional dependencies for `sys`.
 wasmer-compiler-singlepass = { path = "../compiler-singlepass", version = "=4.2.7", optional = true }
 wasmer-compiler-cranelift = { path = "../compiler-cranelift", version = "=4.2.7", optional = true }
