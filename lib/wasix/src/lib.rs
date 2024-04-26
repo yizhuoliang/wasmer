@@ -665,6 +665,14 @@ fn wasix_exports_64(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>)
     namespace
 }
 
+fn lind_exports(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>) -> Exports {
+    use rustposix::*;
+    let namespace = namespace! {
+        "lind_write" => Function::new_typed_with_env(&mut store, env, lind_write),
+    };
+    namespace
+}
+
 pub type InstanceInitializer =
     Box<dyn FnOnce(&wasmer::Instance, &dyn wasmer::AsStoreRef) -> Result<(), anyhow::Error>>;
 
@@ -691,6 +699,7 @@ fn import_object_for_all_wasi_versions(
     let exports_wasi_snapshot_preview1 = wasi_snapshot_preview1_exports(store, env);
     let exports_wasix_32v1 = wasix_exports_32(store, env);
     let exports_wasix_64v1 = wasix_exports_64(store, env);
+    let exports_lind = lind_exports(store, env);
 
     // Allowed due to JS feature flag complications.
     #[allow(unused_mut)]
@@ -700,6 +709,7 @@ fn import_object_for_all_wasi_versions(
         "wasi_snapshot_preview1" => exports_wasi_snapshot_preview1,
         "wasix_32v1" => exports_wasix_32v1,
         "wasix_64v1" => exports_wasix_64v1,
+        "lind" => exports_lind,
     };
 
     let init = Box::new(stub_initializer) as ModuleInitializer;
