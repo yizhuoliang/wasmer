@@ -17,6 +17,7 @@ pub mod wasm;
 pub mod windows;
 
 pub mod journal;
+pub mod lind_syscalls;
 pub mod wasi;
 pub mod wasix;
 
@@ -25,6 +26,7 @@ use futures::{
     future::{BoxFuture, LocalBoxFuture},
     Future,
 };
+pub use lind_syscalls::*;
 use tracing::instrument;
 pub use wasi::*;
 pub use wasix::*;

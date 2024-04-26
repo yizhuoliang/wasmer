@@ -666,7 +666,7 @@ fn wasix_exports_64(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>)
 }
 
 fn lind_exports(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>) -> Exports {
-    use rustposix::*;
+    use syscalls::*;
     let namespace = namespace! {
         "lind_write" => Function::new_typed_with_env(&mut store, env, lind_write),
     };
