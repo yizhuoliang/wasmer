@@ -21,6 +21,7 @@ virtual-fs = { path = "../virtual-fs", version = "0.11.2", default-features = fa
 virtual-net = { path = "../virtual-net", version = "0.6.4", default-features = false, features = ["rkyv"] }
 wasmer-journal = { path = "../journal", version = "0.1.0", default-features = false }
 wasmer-emscripten = { path = "../emscripten", version = "=4.2.8", optional = true }
+rustposix = { path = "../rustposix" }
 wasmer-config.workspace = true
 
 xxhash-rust = { version = "0.8.8", features = ["xxh64"] }
