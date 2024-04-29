@@ -230,8 +230,6 @@ pub fn lind_rustposix_thread_init(cageid: u64, signalflag: u64) {
 }
 
 pub fn lind_write_inner(fd: i32, buf: *const libc::c_void, count: usize, cageid: u64) {
-    lind_lindrustinit(0);
-    lind_rustposix_thread_init(1, 0);
     unsafe {
         dispatch!(
             cageid,
