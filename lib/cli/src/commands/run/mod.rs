@@ -85,7 +85,6 @@ pub struct Run {
 
 impl Run {
     pub fn execute(self, output: Output) -> ! {
-        print!("Hello from Coulson!\n");
         let result = self.execute_inner(output);
         exit_with_wasi_exit_code(result);
     }
