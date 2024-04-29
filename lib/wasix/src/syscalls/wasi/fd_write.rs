@@ -57,6 +57,7 @@ pub fn fd_write<M: MemorySize>(
     let raw_addr = memory.data_ptr();
     let nwritten_ref = nwritten.deref(&memory);
     let x: WasmPtr<<M as MemorySize>::Offset, Memory32> = nwritten_ref.as_ptr();
+    let y = nwritten.offset().into();
     let bytes_written: M::Offset =
         wasi_try_ok!(bytes_written.try_into().map_err(|_| Errno::Overflow));
     wasi_try_mem_ok!(nwritten_ref.write(bytes_written));
