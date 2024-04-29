@@ -17,9 +17,9 @@ pub fn lind_write<M: MemorySize>(
     lind_rustposix_thread_init(1, 0);
     let mut env = ctx.data();
     let memory = unsafe { env.memory_view(&ctx) };
-    let buf_addr = iovs as i64 + memory.data_ptr() as i64;
+    let buf_addr = iovs as u64 + memory.data_ptr() as u64;
     let ptr: *const libc::c_void = unsafe {
-        // Cast i64 to usize, then usize to *const libc::c_void
+        // Cast u64 to usize, then usize to *const libc::c_void
         buf_addr as usize as *const libc::c_void
     };
     lind_write_inner(1, ptr, len as usize, 1);
