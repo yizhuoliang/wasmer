@@ -5,7 +5,7 @@ use crate::syscalls::*;
 
 pub fn lind_write<M: MemorySize>(
     mut ctx: FunctionEnvMut<'_, WasiEnv>,
-    iovs: WasmPtr<__wasi_ciovec_t<M>, M>,
+    iovs: i32,
     iovs_len: M::Offset,
 ) -> Result<Errno, WasiError> {
     // Here, we should fetch the pid aka cageid aka wasiEnv id,
