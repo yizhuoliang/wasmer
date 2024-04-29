@@ -419,6 +419,7 @@ fn wasi_snapshot_preview1_exports(
         "sock_send" => Function::new_typed_with_env(&mut store, env, sock_send::<Memory32>),
         "sock_shutdown" => Function::new_typed_with_env(&mut store, env, sock_shutdown),
         "thread-spawn" => Function::new_typed_with_env(&mut store, env, thread_spawn::<Memory32>),
+        "lind_write" => Function::new_typed_with_env(&mut store, env, lind_write::<Memory32>),
     };
     namespace
 }
@@ -667,9 +668,7 @@ fn wasix_exports_64(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>)
 
 fn lind_exports(mut store: &mut impl AsStoreMut, env: &FunctionEnv<WasiEnv>) -> Exports {
     use syscalls::*;
-    let namespace = namespace! {
-        "lind_write" => Function::new_typed_with_env(&mut store, env, lind_write::<Memory32>),
-    };
+    let namespace = namespace! {};
     namespace
 }
 
