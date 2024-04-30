@@ -168,6 +168,8 @@ pub mod librustposix {
 
         pub(crate) fn lindrustfinalize();
 
+        pub(crate) fn quick_write(fd: i32, buf: *const u8, count: usize, cageid: u64);
+
         pub(crate) fn rustposix_thread_init(cageid: u64, signalflag: u64);
     }
 }
@@ -229,16 +231,17 @@ pub fn lind_rustposix_thread_init(cageid: u64, signalflag: u64) {
     }
 }
 
-pub fn lind_write_inner(fd: i32, buf: *const libc::c_void, count: usize, cageid: u64) {
+pub fn lind_write_inner(fd: i32, buf: *const u8, count: usize, cageid: u64) {
     unsafe {
-        dispatch!(
-            cageid,
-            crate::librustposix::LIND_SAFE_FS_WRITE,
-            RustArg { dispatch_int: fd },
-            RustArg { dispatch_cbuf: buf },
-            RustArg {
-                dispatch_size_t: count
-            }
-        )
+        quick_write(fd, buf, count, cageid);
+        // dispatch!(
+        //     cageid,
+        //     crate::librustposix::LIND_SAFE_FS_WRITE,
+        //     RustArg { dispatch_int: fd },
+        //     RustArg { dispatch_cbuf: buf },
+        //     RustArg {
+        //         dispatch_size_t: count
+        //     }
+        // )
     }
 }
