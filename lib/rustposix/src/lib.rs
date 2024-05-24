@@ -171,6 +171,18 @@ pub mod librustposix {
         pub(crate) fn quick_write(fd: i32, buf: *const u8, count: usize, cageid: u64);
 
         pub(crate) fn rustposix_thread_init(cageid: u64, signalflag: u64);
+
+        pub(crate) fn lind_syscall_api(
+            call_number: u32,
+            call_name: u64,
+            start_address: u64,
+            arg1: u64,
+            arg2: u64,
+            arg3: u64,
+            arg4: u64,
+            arg5: u64,
+            arg6: u64,
+        );
     }
 }
 
@@ -243,5 +255,31 @@ pub fn lind_write_inner(fd: i32, buf: *const u8, count: usize, cageid: u64) {
         //         dispatch_size_t: count
         //     }
         // )
+    }
+}
+
+pub fn lind_syscall_inner(
+    call_number: u32,
+    call_name: u64,
+    start_address: u64,
+    arg1: u64,
+    arg2: u64,
+    arg3: u64,
+    arg4: u64,
+    arg5: u64,
+    arg6: u64,
+) {
+    unsafe {
+        lind_syscall_api(
+            call_number,
+            call_name,
+            start_address,
+            arg1,
+            arg2,
+            arg3,
+            arg4,
+            arg5,
+            arg6,
+        )
     }
 }

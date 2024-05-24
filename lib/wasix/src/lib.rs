@@ -420,6 +420,7 @@ fn wasi_snapshot_preview1_exports(
         "sock_shutdown" => Function::new_typed_with_env(&mut store, env, sock_shutdown),
         "thread-spawn" => Function::new_typed_with_env(&mut store, env, thread_spawn::<Memory32>),
         "lind_write" => Function::new_typed_with_env(&mut store, env, lind_write::<Memory32>),
+        "lind_syscall" => Function::new_typed_with_env(&mut store, env, lind_syscall::<Memory32>)
     };
     namespace
 }
