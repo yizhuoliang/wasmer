@@ -56,6 +56,30 @@ pub enum PackageCheckMode {
     MustNotExist,
 }
 
+/// Ask a user for a package version.
+///
+/// Will continue looping until the user provides a valid version.
+pub fn prompt_for_package_version(
+    message: &str,
+    default: Option<&str>,
+) -> Result<semver::Version, anyhow::Error> {
+    loop {
+        let theme = ColorfulTheme::default();
+        let raw: String = dialoguer::Input::with_theme(&theme)
+            .with_prompt(message)
+            .with_initial_text(default.unwrap_or_default())
+            .interact_text()
+            .context("could not read user input")?;
+
+        match raw.parse::<semver::Version>() {
+            Ok(p) => break Ok(p),
+            Err(err) => {
+                eprintln!("invalid package version: {err}");
+            }
+        }
+    }
+}
+
 /// Ask for a package name.
 ///
 /// Will continue looping until the user provides a valid name.
@@ -73,9 +97,16 @@ pub async fn prompt_for_package(
         if let Some(check) = &check {
             let api = client.expect("Check mode specified, but no API provided");
 
-            let pkg = wasmer_api::query::get_package(api, ident.to_string())
-                .await
-                .context("could not query backend for package")?;
+            let pkg = if let Some(v) = ident.version_opt() {
+                wasmer_api::query::get_package_version(api, ident.full_name(), v.to_string())
+                    .await
+                    .context("could not query backend for package")?
+                    .map(|p| p.package)
+            } else {
+                wasmer_api::query::get_package(api, ident.to_string())
+                    .await
+                    .context("could not query backend for package")?
+            };
 
             match check {
                 PackageCheckMode::MustExist => {
@@ -98,6 +129,8 @@ pub async fn prompt_for_package(
                     }
                 }
             }
+        } else {
+            break Ok((ident, None));
         }
     }
 }

@@ -3,7 +3,7 @@ name: test-sys
 on:
   push:
     branches:
-      - master
+      - main
       - 'with-ci-.*'
       - 'v3.0.x'
       - 'v3.1.x'
@@ -24,8 +24,9 @@ env:
   # Rust, but it's not stable on 1.69 yet. By explicitly setting the protocol we
   # can override that behaviour
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: git
-  MSRV: "1.73"
+  MSRV: "1.74"
   NEXTEST_PROFILE: "ci"
+  RUSTUP_WINDOWS_PATH_ADD_BIN: 1
 
 jobs:
 

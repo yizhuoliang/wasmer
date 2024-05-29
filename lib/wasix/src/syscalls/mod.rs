@@ -760,7 +760,7 @@ pub(crate) fn __sock_upgrade<'a, F, Fut>(
     actor: F,
 ) -> Result<(), Errno>
 where
-    F: FnOnce(crate::net::socket::InodeSocket) -> Fut,
+    F: FnOnce(crate::net::socket::InodeSocket, Fdflags) -> Fut,
     Fut: std::future::Future<Output = Result<Option<crate::net::socket::InodeSocket>, Errno>> + 'a,
 {
     let env = ctx.data();
@@ -786,7 +786,7 @@ where
                 drop(guard);
 
                 // Start the work using the socket
-                let work = actor(socket);
+                let work = actor(socket, fd_entry.flags);
 
                 // Block on the work and process it
                 let res = InlineWaker::block_on(work);
@@ -1142,9 +1142,7 @@ where
         unwind_pointer + (std::mem::size_of::<__wasi_asyncify_t<M::Offset>>() as u64);
     let unwind_data = __wasi_asyncify_t::<M::Offset> {
         start: wasi_try_ok!(unwind_data_start.try_into().map_err(|_| Errno::Overflow)),
-        end: wasi_try_ok!(env
-            .layout
-            .stack_upper
+        end: wasi_try_ok!((env.layout.stack_upper - memory_stack.len() as u64)
             .try_into()
             .map_err(|_| Errno::Overflow)),
     };
@@ -1376,7 +1374,7 @@ pub fn rewind_ext2(
 
         if errno != Errno::Success {
             let exit_code = ExitCode::from(errno);
-            ctx.data().on_exit(Some(exit_code));
+            ctx.data().blocking_on_exit(Some(exit_code));
             return Err(exit_code);
         }
     }
@@ -1507,8 +1505,8 @@ pub(crate) fn _prepare_wasi(wasi_env: &mut WasiEnv, args: Option<Vec<String>>) {
 pub(crate) fn conv_spawn_err_to_errno(err: &SpawnError) -> Errno {
     match err {
         SpawnError::AccessDenied => Errno::Access,
-        SpawnError::NotFound => Errno::Noent,
         SpawnError::Unsupported => Errno::Noexec,
+        _ if err.is_not_found() => Errno::Noent,
         _ => Errno::Inval,
     }
 }

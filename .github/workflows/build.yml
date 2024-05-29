@@ -3,12 +3,12 @@ name: Builds
 env:
   RUST_BACKTRACE: 1
   CARGO_REGISTRIES_CRATES_IO_PROTOCOL: git
-  MSRV: "1.73"
+  MSRV: "1.74"
 
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     tags:
       # this is _not_ a regex, see: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
       - '[0-9]+.[0-9]+.[0-9]+*'

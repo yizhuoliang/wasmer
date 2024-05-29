@@ -52,6 +52,10 @@ impl FileSystem {
 }
 
 impl crate::FileSystem for FileSystem {
+    fn readlink(&self, path: &Path) -> Result<PathBuf> {
+        fs::read_link(path).map_err(Into::into)
+    }
+
     fn read_dir(&self, path: &Path) -> Result<ReadDir> {
         let read_dir = fs::read_dir(path)?;
         let mut data = read_dir
@@ -150,6 +154,12 @@ impl crate::FileSystem for FileSystem {
 
     fn metadata(&self, path: &Path) -> Result<Metadata> {
         fs::metadata(path)
+            .and_then(TryInto::try_into)
+            .map_err(Into::into)
+    }
+
+    fn symlink_metadata(&self, path: &Path) -> Result<Metadata> {
+        fs::symlink_metadata(path)
             .and_then(TryInto::try_into)
             .map_err(Into::into)
     }
@@ -432,6 +442,14 @@ impl VirtualFile for File {
             .and_then(|ct| ct.duration_since(SystemTime::UNIX_EPOCH).ok())
             .map(|ct| ct.as_nanos() as u64)
             .unwrap_or(0)
+    }
+
+    fn set_times(&mut self, atime: Option<u64>, mtime: Option<u64>) -> crate::Result<()> {
+        let atime = atime.map(|t| filetime::FileTime::from_unix_time(t as i64, 0));
+        let mtime = mtime.map(|t| filetime::FileTime::from_unix_time(t as i64, 0));
+
+        filetime::set_file_handle_times(&self.inner_std, atime, mtime)
+            .map_err(|_| crate::FsError::IOError)
     }
 
     fn size(&self) -> u64 {

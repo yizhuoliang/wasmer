@@ -202,7 +202,9 @@ impl Console {
                         .ok();
                 });
                 tracing::debug!(error=?e, %webc, "failed to get webc dependency");
-                return Err(SpawnError::NotFound);
+                return Err(SpawnError::NotFound {
+                    message: e.to_string(),
+                });
             }
         };
 
@@ -298,7 +300,7 @@ impl Console {
         data.insert_str(0, ConsoleConst::TERM_NO_WRAPAROUND);
 
         let mut stderr = self.stderr.clone();
-        virtual_fs::AsyncWriteExt::write_all(&mut stderr, data.as_str().as_bytes())
+        virtual_fs::AsyncWriteExt::write_all(&mut stderr, data.as_bytes())
             .await
             .ok();
     }

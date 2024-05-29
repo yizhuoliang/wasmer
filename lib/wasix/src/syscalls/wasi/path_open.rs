@@ -50,6 +50,10 @@ pub fn path_open<M: MemorySize>(
         return Ok(Errno::Nametoolong);
     }
 
+    if path_len64 == 0 {
+        return Ok(Errno::Noent);
+    }
+
     // o_flags:
     // - __WASI_O_CREAT (create if it does not exist)
     // - __WASI_O_DIRECTORY (fail if not dir)
@@ -248,6 +252,7 @@ pub(crate) fn path_open_internal(
 
                 if let Some(handle) = handle {
                     let handle = handle.read().unwrap();
+                    inode.stat.write().unwrap().st_mtim = handle.last_modified();
                     if let Some(fd) = handle.get_special_fd() {
                         // We clone the file descriptor so that when its closed
                         // nothing bad happens
