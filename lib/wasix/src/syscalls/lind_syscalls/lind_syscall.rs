@@ -17,8 +17,7 @@ pub fn lind_syscall<M: MemorySize>(
     arg5: u64,
     arg6: u64,
 ) -> Result<Errno, WasiError> {
-    lind_lindrustinit(0);
-    lind_rustposix_thread_init(1, 0);
+    // lind_rustposix_thread_init(1, 0);
     // Get the linear memory start address
     // Ideally we should only do this once for each cage,
     // but here I pass it for every call, for simplicity
@@ -38,6 +37,5 @@ pub fn lind_syscall<M: MemorySize>(
         arg6,
     );
 
-    lind_lindrustfinalize();
     Ok(Errno::Success)
 }

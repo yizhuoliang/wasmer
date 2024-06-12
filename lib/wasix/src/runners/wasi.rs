@@ -260,6 +260,10 @@ impl WasiRunner {
         module_hash: ModuleHash,
         asyncify: bool,
     ) -> Result<(), Error> {
+        // We do the initialization of the rustposix library here, which should
+        // be done only onece for each program
+        rustposix::lind_lindrustinit(0);
+
         let wasi = webc::metadata::annotations::Wasi::new(program_name);
         let mut store = runtime.new_store();
 
@@ -296,6 +300,7 @@ impl WasiRunner {
             builder.run_with_store_ext(module.clone(), module_hash, &mut store)?;
         }
 
+        rustposix::lind_lindrustfinalize();
         Ok(())
     }
 }
